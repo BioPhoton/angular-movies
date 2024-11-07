@@ -15,11 +15,12 @@
   },
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@nx/angular:application",
       "options": {
-        "outputPath": "dist/projects/movies/browser",
+        "outputPath": {
+          "base": "dist/projects/movies"
+        },
         "index": "projects/movies/src/index.html",
-        "main": "projects/movies/src/main.ts",
         "tsConfig": "projects/movies/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "namedChunks": true,
@@ -31,15 +32,15 @@
           "projects/movies/src/_routes.json"
         ],
         "styles": ["projects/movies/src/styles.scss"],
-        "scripts": []
+        "scripts": [],
+        "browser": "projects/movies/src/main.ts",
+        "prerender": false
       },
       "configurations": {
         "development": {
           "namedChunks": true,
           "sourceMap": true,
-          "vendorChunk": true,
           "extractLicenses": false,
-          "buildOptimizer": false,
           "optimization": false,
           "serviceWorker": false
         },
@@ -48,93 +49,14 @@
           "namedChunks": true,
           "sourceMap": true,
           "extractLicenses": false,
-          "buildOptimizer": false,
           "optimization": false,
           "serviceWorker": false,
-          "budgets": false
+          "budgets": false,
+          "plugins": ["projects/movies/esbuild-plugin/index.ts"]
         },
         "production": {
-          "serviceWorker": true,
-          "ngswConfigPath": "projects/movies/src/ngsw-config.json",
-          "fileReplacements": [
-            {
-              "replace": "projects/movies/src/environments/environment.ts",
-              "with": "projects/movies/src/environments/environment.production.ts"
-            }
-          ],
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "400KB",
-              "maximumError": "500KB"
-            },
-            {
-              "type": "bundle",
-              "name": "main",
-              "maximumWarning": "390KB",
-              "maximumError": "500KB"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "3000b",
-              "maximumError": "4.5kb"
-            },
-            {
-              "type": "bundle",
-              "name": "styles",
-              "maximumWarning": "6320b",
-              "maximumError": "6.18KB"
-            },
-            {
-              "type": "bundle",
-              "name": "common",
-              "maximumWarning": "10KB",
-              "maximumError": "11.22KB"
-            },
-            {
-              "type": "bundle",
-              "name": "polyfills",
-              "maximumWarning": "118b",
-              "maximumError": "118b"
-            }
-          ]
-        }
-      },
-      "defaultConfiguration": "production",
-      "outputs": ["{options.outputPath}"]
-    },
-    "build-esbuild": {
-      "executor": "@angular-devkit/build-angular:browser-esbuild",
-      "options": {
-        "outputPath": "dist/projects/movies/browser",
-        "index": "projects/movies/src/index.html",
-        "main": "projects/movies/src/main.ts",
-        "tsConfig": "projects/movies/tsconfig.app.json",
-        "inlineStyleLanguage": "scss",
-        "namedChunks": true,
-        "assets": [
-          "projects/movies/src/favicon.ico",
-          "projects/movies/src/manifest.json",
-          "projects/movies/src/manifest.webmanifest",
-          "projects/movies/src/assets",
-          "projects/movies/src/_routes.json"
-        ],
-        "styles": ["projects/movies/src/styles.scss"],
-        "scripts": []
-      },
-      "configurations": {
-        "development": {
-          "namedChunks": true,
-          "sourceMap": true,
-          "vendorChunk": true,
-          "extractLicenses": false,
-          "buildOptimizer": false,
-          "optimization": false,
-          "serviceWorker": false
-        },
-        "production": {
-          "serviceWorker": true,
-          "ngswConfigPath": "projects/movies/src/ngsw-config.json",
+          "serviceWorker": "projects/movies/src/ngsw-config.json",
+          "plugins": ["projects/movies/esbuild-plugin/index.ts"],
           "fileReplacements": [
             {
               "replace": "projects/movies/src/environments/environment.ts",
@@ -144,10 +66,10 @@
         }
       },
       "defaultConfiguration": "production",
-      "outputs": ["{options.outputPath}"]
+      "outputs": ["{options.outputPath.base}"]
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "options": {
         "port": 4200
       },
@@ -160,7 +82,7 @@
           "buildTarget": "movies:build:production"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "production"
     },
     "ngsw-config": {
       "executor": "nx:run-commands",

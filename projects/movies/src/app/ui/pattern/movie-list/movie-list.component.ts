@@ -13,6 +13,7 @@ import {FastSvgComponent} from '@push-based/ngx-fast-svg';
 import {GridListComponent} from '../../component/grid-list/grid-list.component';
 import {RxIf} from '@rx-angular/template/if';
 import {Movie} from '../../../state/movie.state';
+import { SpeculativeLinkDirective } from '../../../shared/cdk/speculative-link/speculative-link.directive';
 
 type UiActions = { paginate: boolean };
 
@@ -27,6 +28,7 @@ type UiActions = { paginate: boolean };
     GridListComponent,
     RxIf,
     NgOptimizedImage,
+    SpeculativeLinkDirective
   ],
   selector: 'ui-movie-list',
   template: `
@@ -39,6 +41,7 @@ type UiActions = { paginate: boolean };
       <a
         class="ui-grid-list-item"
         *rxFor="let movie of movies$; index as idx; trackBy: trackByMovieId"
+        [speculativeLink]='"/detail/movie/" + movie.id'
         [routerLink]="['/detail/movie', movie.id]"
         [attr.data-uf]="'movie-' + idx"
       >

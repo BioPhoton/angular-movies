@@ -1,13 +1,18 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { RxLet } from '@rx-angular/template/let';
+import { AppShellComponent } from './app-shell/app-shell.component';
 import { ZonelessRouting } from './shared/zone-less/zone-less-routing.service';
 
 @Component({
   selector: 'app-root',
   template: `
     <app-shell *rxLet="[]">
-      <router-outlet></router-outlet>
+      <router-outlet />
     </app-shell>
   `,
+  standalone: true,
+  imports: [RouterOutlet, AppShellComponent, RxLet],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
@@ -19,9 +24,9 @@ export class AppComponent {
 
    import { ZonelessRouting } from './shared/zone-agnostic/zone-less-routing.service';
 
-   constructor() {
-    inject(ZonelessRouting).init();
-  }
+   constructor(private zonelessRouting: ZonelessRouting) {
+       this.zonelessRouting.init();
+     }
    *
    */
   constructor() {

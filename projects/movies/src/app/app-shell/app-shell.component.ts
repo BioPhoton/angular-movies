@@ -18,6 +18,7 @@ import {DarkModeToggleComponent} from '../ui/component/dark-mode-toggle/dark-mod
 import {RxFor} from '@rx-angular/template/for';
 import {LazyDirective} from '../shared/cdk/lazy/lazy.directive';
 import {FastSvgComponent} from '@push-based/ngx-fast-svg';
+import { SpeculativeLinkDirective } from '../shared/cdk/speculative-link/speculative-link.directive';
 
 type Actions = {
   sideDrawerOpenToggle: boolean;
@@ -36,6 +37,7 @@ type Actions = {
     SearchBarComponent,
     DarkModeToggleComponent,
     LazyDirective,
+    SpeculativeLinkDirective
   ],
   selector: 'app-shell',
   templateUrl: './app-shell.component.html',

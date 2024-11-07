@@ -1,5 +1,13 @@
-import {Routes} from '@angular/router';
-// import { RouteISRConfig } from 'ngx-isr';
+import { ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { MovieResource } from './data-access/api/resources/movie.resource';
+import { firstValueFrom, tap } from 'rxjs';
+import { preloadImage } from './shared/cdk/preloader/preloader.service';
+import { DiscoverResource } from './data-access/api/resources/discover.resource';
+// import { inject } from '@angular/core';
+// import { MovieResource } from './data-access/api/resources/movie.resource';
+// import { firstValueFrom, tap } from 'rxjs';
+// import { DiscoverResource } from './data-access/api/resources/discover.resource';
 
 export const ROUTES: Routes = [
   /**
@@ -29,12 +37,33 @@ export const ROUTES: Routes = [
    */
   {
     path: 'list/:type/:identifier',
+    data: {
+      preResolve: (route: ActivatedRouteSnapshot): void => {
+        // instantiate cache in side effect
+        if (route.params.type === 'genre') {
+          firstValueFrom(inject(DiscoverResource).getDiscoverMovies({with_genres: route.params.identifier, page: 1}).pipe(tap(console.log)));
+        }
+        if (route.params.type === 'category') {
+          firstValueFrom(inject(MovieResource).getMovieCategory(route.params.identifier));
+        }
+      }
+    },
     loadComponent: () =>
       import('./pages/movie-list-page/movie-list-page.component'),
     // data: { revalidate: 10 } as RouteISRConfig
   },
   {
     path: 'detail/movie/:identifier',
+    data: {
+      preResolve: (route: ActivatedRouteSnapshot) => {
+        firstValueFrom(
+          inject(MovieResource).getMovie(route.params.identifier)
+            .pipe(
+              tap(({ poster_path}) => preloadImage(poster_path))
+            )
+        )
+      }
+    },
     loadComponent: () =>
       import('./pages/movie-detail-page/movie-detail-page.component'),
   },

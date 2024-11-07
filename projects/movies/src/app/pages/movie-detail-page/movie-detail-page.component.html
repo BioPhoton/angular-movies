@@ -1,5 +1,5 @@
+<ng-container *rxLet="movie$; let movie">
 <article class="movie-detail-wrapper">
-  <ng-container *rxLet="movie$; let movie">
     <ui-detail-grid [style.opacity]="!!movie ? 1 : 0">
       <div detailGridMedia>
         <img
@@ -170,9 +170,8 @@
       </div>
     </ui-detail-grid>
     <div class="loader" *ngIf="!movie"></div>
-  </ng-container>
 </article>
-<article class="recommendations">
+<article class="recommendations" *rxIf='movie'>
   <header>
     <h1>Recommended</h1>
     <h2>Movies</h2>
@@ -189,3 +188,4 @@
     <div *ngIf="ctx.loading" class="loader"></div>
   </ng-container>
 </article>
+</ng-container>
